@@ -6,7 +6,7 @@
 buildarch=4
 
 pkgname=xbmc-imx-git
-pkgver=14.20141019
+pkgver=14.20141025
 pkgrel=1
 pkgdesc="A software media player and entertainment hub for digital media for select imx6 systems"
 arch=('armv7h')
@@ -33,7 +33,7 @@ source=('xbmc.service'
 
 
 md5sums=('07096dfd530cc432fa6073ee1a32e7f6'
-         '730ac095a89b05c3c2cf2dd93947cb5c'
+         '14300a872c0dbdda478d5cfc71f551ec'
          '8fab4cc5cac44a7090ca7e839e326ec8'
          'c3ad87fc9f278f9530d673be9b1f58f0'
          'df3edfc7269d4a4d6f94d935c9adb0ac'
@@ -100,22 +100,21 @@ package() {
 
   # run feh with python2
   sed -i -e 's/python/python2/g' ${pkgdir}${_prefix}/bin/xbmc
-
-  # Remove checks that don't apply to the i.MX6 SoC
-  head -n 171 "${pkgdir}${_prefix}/share/xbmc/FEH.py" > "${pkgdir}${_prefix}/share/xbmc/FEH.py.new"
-  mv "${pkgdir}${_prefix}/share/xbmc/FEH.py.new"  "${pkgdir}${_prefix}/share/xbmc/FEH.py"
+  sed -i -e 's/python/python2/g' ${pkgdir}${_prefix}/bin/kodi
 
   # lsb_release fix
   sed -i -e 's/which lsb_release > \/dev\/null/\[ -f \/etc\/arch-release ]/g' "${pkgdir}${_prefix}/bin/xbmc"
+  sed -i -e 's/which lsb_release > \/dev\/null/\[ -f \/etc\/arch-release ]/g' "${pkgdir}${_prefix}/bin/kodi"
   sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/arch-release/g" "${pkgdir}${_prefix}/bin/xbmc"
+  sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/arch-release/g" "${pkgdir}${_prefix}/bin/kodi"
 
   # Tools
-  install -D -m 0755 "${srcdir}/${_gitname}/tools/TexturePacker/TexturePacker" "${pkgdir}${_prefix}/share/xbmc/"
+  install -D -m 0755 "${srcdir}/${_gitname}/tools/TexturePacker/TexturePacker" "${pkgdir}${_prefix}/share/kodi/"
 
   # Licenses
   install -d -m 0755 "${pkgdir}${_prefix}/share/licenses/${pkgname}"
   for licensef in LICENSE.GPL copying.txt; do
-    mv "${pkgdir}${_prefix}/share/doc/xbmc/${licensef}" "${pkgdir}${_prefix}/share/licenses/${pkgname}"
+    mv "${pkgdir}${_prefix}/share/doc/kodi/${licensef}" "${pkgdir}${_prefix}/share/licenses/${pkgname}"
   done
 
   # systemd stuff
@@ -129,5 +128,3 @@ package() {
   install -Dm0644 $srcdir/imx-spdif.conf $pkgdir/usr/share/alsa/cards/imx-spdif.conf
   install -Dm0644 $srcdir/imx-hdmi-soc.conf $pkgdir/usr/share/alsa/cards/imx-hdmi-soc.conf
 }
-
-
