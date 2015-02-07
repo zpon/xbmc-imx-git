@@ -42,7 +42,7 @@ md5sums=('07096dfd530cc432fa6073ee1a32e7f6'
 # master branch of xbmc-imx6 organization. Modified by Stephan "wolgar" Rafin, Chris "koying" Browet, Rudi "rudi-warped" Ihle and smallint
 _gitname="xbmc"
 _gitroot="git://github.com/xbmc"
-_gitbranch="master"
+_gitbranch="Helix"
 
 _prefix=/usr
 
