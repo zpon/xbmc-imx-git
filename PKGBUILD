@@ -6,15 +6,15 @@
 buildarch=4
 
 pkgname=xbmc-imx-git
-pkgver=14.20141025
-pkgrel=1
+pkgver=14.20150207
+pkgrel=2
 pkgdesc="A software media player and entertainment hub for digital media for select imx6 systems"
 arch=('armv7h')
 url="http://xbmc.org"
 license=('GPL' 'custom')
 depends=('fribidi' 'lzo2' 'smbclient' 'libtiff' 'libpng' 'libcdio' 'yajl' 'libmariadbclient' 'libjpeg-turbo' 'libsamplerate' 'libssh' 'libmicrohttpd' 'sdl_image' 'python2' 'libass' 'libmpeg2' 'libmad' 'libmodplug' 'jasper' 'rtmpdump' 'unzip' 'libbluray' 'libnfs' 'afpfs-ng' 'libshairport' 'avahi' 'bluez-libs' 'tinyxml' 'libplist' 'swig' 'taglib' 'libxslt' 'libfslvpuwrap' 'gpu-viv-bin-mx6q-fb' 'libcec-imx6' 'firmware-imx')
 makedepends=('boost' 'cmake' 'gperf' 'nasm' 'zip' 'udisks' 'git' 'autoconf' 'java-runtime-headless' 'linux-headers-imx6-fsl' 'pkg-config' 'automake' # contains aclocal
-'libtool'
+'make' 'libtool' 'binutils' # contains strip binary
 )
 optdepends=(
   'lirc: remote controller support'
@@ -23,11 +23,11 @@ optdepends=(
 )
 provides=("xbmc")
 conflicts=("xbmc")
-install="xbmc.install"
-source=('xbmc.service'
-        'runxbmc'
-        'xbmc.conf'
-        '10-xbmc.rules'
+install="kodi.install"
+source=('kodi.service'
+        'runkodi'
+        'kodi.conf'
+        '10-kodi.rules'
         'imx-spdif.conf'
         'imx-hdmi-soc.conf')
 
@@ -118,10 +118,10 @@ package() {
   done
 
   # systemd stuff
-  install -Dm0644 $srcdir/xbmc.service $pkgdir/usr/lib/systemd/system/xbmc.service
-  install -Dm0755 $srcdir/runxbmc $pkgdir/usr/bin/runxbmc
-  install -Dm0644 $srcdir/xbmc.conf $pkgdir/etc/tmpfiles.d/xbmc.conf
-  install -Dm0644 $srcdir/10-xbmc.rules $pkgdir/etc/polkit-1/rules.d/10-xbmc.rules
+  install -Dm0644 $srcdir/kodi.service $pkgdir/usr/lib/systemd/system/kodi.service
+  install -Dm0755 $srcdir/runkodi $pkgdir/usr/bin/runkodi
+  install -Dm0644 $srcdir/kodi.conf $pkgdir/etc/tmpfiles.d/kodi.conf
+  install -Dm0644 $srcdir/10-kodi.rules $pkgdir/etc/polkit-1/rules.d/10-kodi.rules
   chmod 700 $pkgdir/etc/polkit-1/rules.d
 
   # imx6-specific alsa conf

@@ -6,7 +6,7 @@ After = remote-fs.target
 User = xbmc
 Group = xbmc
 Type = simple
-ExecStart = /usr/bin/runxbmc
+ExecStart = /usr/bin/runkodi
 Restart = on-failure
 
 [Install]
