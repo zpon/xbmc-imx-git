@@ -7,7 +7,7 @@ buildarch=4
 
 pkgname=xbmc-imx-git
 pkgver=14.20150207
-pkgrel=2
+pkgrel=3
 pkgdesc="A software media player and entertainment hub for digital media for select imx6 systems"
 arch=('armv7h')
 url="http://xbmc.org"
@@ -32,7 +32,7 @@ source=('kodi.service'
         'imx-hdmi-soc.conf')
 
 
-md5sums=('07096dfd530cc432fa6073ee1a32e7f6'
+md5sums=('4c689f3ab03d57ad4f02f57d45d6c923'
          '14300a872c0dbdda478d5cfc71f551ec'
          '8fab4cc5cac44a7090ca7e839e326ec8'
          'c3ad87fc9f278f9530d673be9b1f58f0'
