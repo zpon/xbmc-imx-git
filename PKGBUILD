@@ -6,7 +6,7 @@
 buildarch=4
 
 pkgname=xbmc-imx-git
-pkgver=14.20150207
+pkgver=15.20150207
 pkgrel=3
 pkgdesc="A software media player and entertainment hub for digital media for select imx6 systems"
 arch=('armv7h')
@@ -109,7 +109,8 @@ package() {
   sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/arch-release/g" "${pkgdir}${_prefix}/bin/kodi"
 
   # Tools
-  install -D -m 0755 "${srcdir}/${_gitname}/tools/TexturePacker/TexturePacker" "${pkgdir}${_prefix}/share/kodi/"
+  # TexturePacker has been moved, this step fails
+  #install -D -m 0755 "${srcdir}/${_gitname}/tools/TexturePacker/TexturePacker" "${pkgdir}${_prefix}/share/kodi/"
 
   # Licenses
   install -d -m 0755 "${pkgdir}${_prefix}/share/licenses/${pkgname}"
