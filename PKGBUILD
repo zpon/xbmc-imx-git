@@ -6,15 +6,16 @@
 buildarch=4
 
 pkgname=xbmc-imx-git
-pkgver=15.20150207
-pkgrel=3
+pkgver=15.20150517
+pkgrel=2
 pkgdesc="A software media player and entertainment hub for digital media for select imx6 systems"
 arch=('armv7h')
 url="http://xbmc.org"
 license=('GPL' 'custom')
-depends=('fribidi' 'lzo2' 'smbclient' 'libtiff' 'libpng' 'libcdio' 'yajl' 'libmariadbclient' 'libjpeg-turbo' 'libsamplerate' 'libssh' 'libmicrohttpd' 'sdl_image' 'python2' 'libass' 'libmpeg2' 'libmad' 'libmodplug' 'jasper' 'rtmpdump' 'unzip' 'libbluray' 'libnfs' 'afpfs-ng' 'libshairport' 'avahi' 'bluez-libs' 'tinyxml' 'libplist' 'swig' 'taglib' 'libxslt' 'libfslvpuwrap' 'gpu-viv-bin-mx6q-fb' 'libcec-imx6' 'firmware-imx')
+depends=('fribidi' 'lzo2' 'smbclient' 'libtiff' 'libpng' 'libcdio' 'yajl' 'libmariadbclient' 'libjpeg-turbo' 'libsamplerate' 'libssh' 'libmicrohttpd' 'sdl_image' 'python2' 'libass' 'libmpeg2' 'libmad' 'libmodplug' 'jasper' 'rtmpdump' 'unzip' 'libbluray' 'libnfs' 'afpfs-ng' 'libshairport' 'avahi' 'bluez-libs' 'tinyxml' 'libplist' 'swig' 'taglib' 'libxslt' 'libfslvpuwrap' 'gpu-viv-bin-mx6q-fb' 'gpu-viv-g2d' 'libcec-imx6' 'firmware-imx')
 makedepends=('boost' 'cmake' 'gperf' 'nasm' 'zip' 'udisks' 'git' 'autoconf' 'java-runtime-headless' 'linux-headers-imx6-fsl' 'pkg-config' 'automake' # contains aclocal
 'make' 'libtool' 'binutils' # contains strip binary
+'libplatform' # Can be found here: https://github.com/zpon/libplatform-arch
 )
 optdepends=(
   'lirc: remote controller support'
@@ -61,7 +62,6 @@ prepare() {
   
   msg2 "GIT checkout done or server timeout." 
 
-
   cd "${srcdir}/${_gitname}"
 
   # fix lsb_release dependency
@@ -77,18 +77,19 @@ build() {
   # Configuring XBMC
   export PYTHON_VERSION=2  # external python v2
  
-  INCLUDES="-I/opt/fsl/include" 
+  INCLUDES="-I/opt/fsl/include"
   export CFLAGS="-Ofast -mfloat-abi=hard -mfpu=vfpv3-d16 -mtls-dialect=gnu -march=armv7-a -mtune=cortex-a9 -pipe -fstack-protector --param=ssp-buffer-size=4 -D_FORTIFY_SOURCE=2 $INCLUDES -Wl,-rpath,/opt/fsl/lib -L/opt/fsl/lib"
   export CPPFLAGS="-Ofast -mfloat-abi=hard -mfpu=vfpv3-d16 -mtls-dialect=gnu -march=armv7-a -mtune=cortex-a9 -fstack-protector --param=ssp-buffer-size=4 -D_FORTIFY_SOURCE=2 $INCLUDES -Wl,-rpath,/opt/fsl/lib -L/opt/fsl/lib"
   export CXXFLAGS="-Ofast -mfloat-abi=hard -mfpu=vfpv3-d16 -mtls-dialect=gnu -march=armv7-a -mtune=cortex-a9 -fstack-protector --param=ssp-buffer-size=4 -D_FORTIFY_SOURCE=2 $INCLUDES -Wl,-rpath,/opt/fsl/lib -L/opt/fsl/lib"
   export LDFLAGS="$LDFLAGS -L/opt/fsl/lib"
+
   ./configure --prefix=$_prefix --exec-prefix=$_prefix  \
-   --disable-gl --enable-gles --disable-x11 --disable-sdl \
-  --enable-optimizations --disable-external-libraries --disable-goom --disable-hal \
-  --disable-pulse --disable-vaapi --disable-vdpau --disable-xrandr --enable-airplay \
-  --enable-avahi --enable-libbluray --enable-dvdcss --disable-debug --disable-joystick --disable-mid \
-  --enable-nfs --disable-profiling --disable-projectm --enable-rsxs --enable-rtmp --disable-vaapi \
-  --disable-external-ffmpeg --enable-optical-drive --enable-codec=imxvpu --enable-libcec
+    --disable-gl --enable-gles --disable-x11 --disable-sdl \
+    --enable-optimizations --disable-external-libraries --disable-goom --disable-hal \
+    --disable-pulse --disable-vaapi --disable-vdpau --disable-xrandr --enable-airplay \
+    --enable-avahi --enable-libbluray --enable-dvdcss --disable-debug --disable-joystick --disable-mid \
+    --enable-nfs --disable-profiling --disable-projectm --enable-rsxs --enable-rtmp --disable-vaapi \
+    --disable-external-ffmpeg --enable-optical-drive --enable-codec=imxvpu --enable-libcec
 
   make
 }
