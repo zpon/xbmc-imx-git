@@ -6,8 +6,8 @@
 buildarch=4
 
 pkgname=xbmc-imx-git
-pkgver=15.20150517
-pkgrel=2
+pkgver=15.20150906
+pkgrel=1
 pkgdesc="A software media player and entertainment hub for digital media for select imx6 systems"
 arch=('armv7h')
 url="http://xbmc.org"
@@ -16,6 +16,7 @@ depends=('fribidi' 'lzo2' 'smbclient' 'libtiff' 'libpng' 'libcdio' 'yajl' 'libma
 makedepends=('boost' 'cmake' 'gperf' 'nasm' 'zip' 'udisks' 'git' 'autoconf' 'java-runtime-headless' 'linux-headers-imx6-fsl' 'pkg-config' 'automake' # contains aclocal
 'make' 'libtool' 'binutils' # contains strip binary
 'libplatform' # Can be found here: https://github.com/zpon/libplatform-arch
+'dcadec-git' # Can be found here: https://aur.archlinux.org/packages/dcadec-git/
 )
 optdepends=(
   'lirc: remote controller support'
