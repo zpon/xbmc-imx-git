@@ -6,7 +6,7 @@
 buildarch=4
 
 pkgname=xbmc-imx-git
-pkgver=15.20150906
+pkgver=15.20151104
 pkgrel=1
 pkgdesc="A software media player and entertainment hub for digital media for select imx6 systems"
 arch=('armv7h')
@@ -31,7 +31,8 @@ source=('kodi.service'
         'kodi.conf'
         '10-kodi.rules'
         'imx-spdif.conf'
-        'imx-hdmi-soc.conf')
+        'imx-hdmi-soc.conf'
+        'OpenMaxVideo.cpp.patch')
 
 
 md5sums=('4c689f3ab03d57ad4f02f57d45d6c923'
@@ -39,7 +40,8 @@ md5sums=('4c689f3ab03d57ad4f02f57d45d6c923'
          '8fab4cc5cac44a7090ca7e839e326ec8'
          'c3ad87fc9f278f9530d673be9b1f58f0'
          'df3edfc7269d4a4d6f94d935c9adb0ac'
-         '90f401e9f255291ec75414056e0d30c0')
+         '90f401e9f255291ec75414056e0d30c0'
+         'c773fa542e067c39b62a3ffd51318cde')
 
 # master branch of xbmc-imx6 organization. Modified by Stephan "wolgar" Rafin, Chris "koying" Browet, Rudi "rudi-warped" Ihle and smallint
 _gitname="xbmc"
@@ -67,6 +69,11 @@ prepare() {
 
   # fix lsb_release dependency
   sed -i -e 's:/usr/bin/lsb_release -d:cat /etc/arch-release:' xbmc/utils/SystemInfo.cpp
+
+  # revert OpenVideoMax.cpp
+  git checkout xbmc/cores/dvdplayer/DVDCodecs/Video/OpenMaxVideo.cpp
+  # patch OpenVideoMax.cpp
+  git apply ../../OpenMaxVideo.cpp.patch
 }
 
 build() {
