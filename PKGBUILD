@@ -6,17 +6,18 @@
 buildarch=4
 
 pkgname=xbmc-imx-git
-pkgver=15.20151104
+pkgver=15.20160403
 pkgrel=1
 pkgdesc="A software media player and entertainment hub for digital media for select imx6 systems"
 arch=('armv7h')
 url="http://xbmc.org"
 license=('GPL' 'custom')
-depends=('fribidi' 'lzo2' 'smbclient' 'libtiff' 'libpng' 'libcdio' 'yajl' 'libmariadbclient' 'libjpeg-turbo' 'libsamplerate' 'libssh' 'libmicrohttpd' 'sdl_image' 'python2' 'libass' 'libmpeg2' 'libmad' 'libmodplug' 'jasper' 'rtmpdump' 'unzip' 'libbluray' 'libnfs' 'afpfs-ng' 'libshairport' 'avahi' 'bluez-libs' 'tinyxml' 'libplist' 'swig' 'taglib' 'libxslt' 'libfslvpuwrap' 'gpu-viv-bin-mx6q-fb' 'gpu-viv-g2d' 'libcec-imx6' 'firmware-imx')
+depends=('fribidi' 'lzo2' 'smbclient' 'libtiff' 'libpng' 'libcdio' 'yajl' 'libmariadbclient' 'libjpeg-turbo' 'libsamplerate' 'libssh' 'libmicrohttpd' 'sdl_image' 'python2' 'libass' 'libmpeg2' 'libmad' 'libmodplug' 'jasper' 'rtmpdump' 'unzip' 'libbluray' 'libnfs' 'afpfs-ng' 'libshairport' 'avahi' 'bluez-libs' 'tinyxml' 'libplist' 'swig' 'taglib' 'libxslt' 'libfslvpuwrap' 'imx-gpu-viv-fb' 'imx-gpu-viv-g2d' 'libcec-imx6' 'firmware-imx')
 makedepends=('boost' 'cmake' 'gperf' 'nasm' 'zip' 'udisks' 'git' 'autoconf' 'java-runtime-headless' 'linux-headers-imx6-fsl' 'pkg-config' 'automake' # contains aclocal
 'make' 'libtool' 'binutils' # contains strip binary
-'libplatform' # Can be found here: https://github.com/zpon/libplatform-arch
+'p8-platform'
 'dcadec-git' # Can be found here: https://aur.archlinux.org/packages/dcadec-git/
+'libcrossguid-git'
 )
 optdepends=(
   'lirc: remote controller support'
@@ -32,7 +33,8 @@ source=('kodi.service'
         '10-kodi.rules'
         'imx-spdif.conf'
         'imx-hdmi-soc.conf'
-        'OpenMaxVideo.cpp.patch')
+        'OpenMaxVideo.cpp.patch'
+	'GetDatabaseResults.patch')
 
 
 md5sums=('4c689f3ab03d57ad4f02f57d45d6c923'
@@ -41,7 +43,8 @@ md5sums=('4c689f3ab03d57ad4f02f57d45d6c923'
          'c3ad87fc9f278f9530d673be9b1f58f0'
          'df3edfc7269d4a4d6f94d935c9adb0ac'
          '90f401e9f255291ec75414056e0d30c0'
-         'c773fa542e067c39b62a3ffd51318cde')
+         '3a640131cdb9e09dd3b9fbf492b47885'
+	 '8611b1884bb58bdbb9ac58569ab7ed9e')
 
 # master branch of xbmc-imx6 organization. Modified by Stephan "wolgar" Rafin, Chris "koying" Browet, Rudi "rudi-warped" Ihle and smallint
 _gitname="xbmc"
@@ -68,12 +71,14 @@ prepare() {
   cd "${srcdir}/${_gitname}"
 
   # fix lsb_release dependency
-  sed -i -e 's:/usr/bin/lsb_release -d:cat /etc/arch-release:' xbmc/utils/SystemInfo.cpp
+  #sed -i -e 's:/usr/bin/lsb_release -d:cat /etc/arch-release:' xbmc/utils/SystemInfo.cpp
 
+  msg2 "Patching"
   # revert OpenVideoMax.cpp
-  git checkout xbmc/cores/dvdplayer/DVDCodecs/Video/OpenMaxVideo.cpp
-  # patch OpenVideoMax.cpp
+  git checkout .
   git apply ../../OpenMaxVideo.cpp.patch
+  git apply ../../GetDatabaseResults.patch
+  msg2 "Done patching"
 }
 
 build() {
@@ -86,7 +91,7 @@ build() {
   export PYTHON_VERSION=2  # external python v2
  
   INCLUDES="-I/opt/fsl/include"
-  export CFLAGS="-Ofast -mfloat-abi=hard -mfpu=vfpv3-d16 -mtls-dialect=gnu -march=armv7-a -mtune=cortex-a9 -pipe -fstack-protector --param=ssp-buffer-size=4 -D_FORTIFY_SOURCE=2 $INCLUDES -Wl,-rpath,/opt/fsl/lib -L/opt/fsl/lib"
+  export CFLAGS="-Ofast -mfloat-abi=hard -mfpu=vfpv3-d16 -mtls-dialect=gnu -march=armv7-a -mtune=cortex-a9 -pipe -fstack-protector --param=ssp-buffer-size=4 -D_FORTIFY_SOURCE=2 $INCLUDES -Wl,-rpath,/opt/fsl/lib -L/opt/fsl/lib -D_GLIBCXX_USE_CXX11_ABI=1"
   export CPPFLAGS="-Ofast -mfloat-abi=hard -mfpu=vfpv3-d16 -mtls-dialect=gnu -march=armv7-a -mtune=cortex-a9 -fstack-protector --param=ssp-buffer-size=4 -D_FORTIFY_SOURCE=2 $INCLUDES -Wl,-rpath,/opt/fsl/lib -L/opt/fsl/lib"
   export CXXFLAGS="-Ofast -mfloat-abi=hard -mfpu=vfpv3-d16 -mtls-dialect=gnu -march=armv7-a -mtune=cortex-a9 -fstack-protector --param=ssp-buffer-size=4 -D_FORTIFY_SOURCE=2 $INCLUDES -Wl,-rpath,/opt/fsl/lib -L/opt/fsl/lib"
   export LDFLAGS="$LDFLAGS -L/opt/fsl/lib"
@@ -95,10 +100,10 @@ build() {
     --disable-gl --enable-gles --disable-x11 --disable-sdl \
     --enable-optimizations --disable-external-libraries --disable-goom --disable-hal \
     --disable-pulse --disable-vaapi --disable-vdpau --disable-xrandr --enable-airplay \
-    --enable-avahi --enable-libbluray --enable-dvdcss --disable-debug --disable-joystick --disable-mid \
+    --enable-avahi --enable-libbluray --enable-dvdcss --enable-debug --disable-joystick --disable-mid \
     --enable-nfs --disable-profiling --disable-projectm --enable-rsxs --enable-rtmp --disable-vaapi \
-    --disable-external-ffmpeg --enable-optical-drive --enable-codec=imxvpu --enable-libcec
-
+    --disable-external-ffmpeg --enable-optical-drive --enable-libcec \
+    --enable-codec=imxvpu
   make
 }
 
